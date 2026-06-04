@@ -6,23 +6,19 @@ service cloud.firestore {
       return request.auth != null;
     }
 
-    function userDoc() {
-      return get(/databases/$(database)/documents/authorizedUsers/$(request.auth.uid));
-    }
-
     function isAuthorized() {
-      return signedIn() && userDoc().data.active == true;
+      return signedIn();
     }
 
     function isAdminEmail() {
       return request.auth.token.email in [
-        "admin1@example.com",
-        "admin2@example.com"
+        "fveronica73@gmail.com",
+        "fspagnoli02@gmail.com"
       ];
     }
 
     function isAdmin() {
-      return isAuthorized() && userDoc().data.role == "admin" && isAdminEmail();
+      return isAuthorized() && isAdminEmail();
     }
 
     match /bookings/{bookingId} {

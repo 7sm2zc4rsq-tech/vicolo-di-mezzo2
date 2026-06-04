@@ -71,7 +71,7 @@ Admin:
 - possono accedere a impostazioni operative.
 
 Visualizzatori:
-- utenti autorizzati via Authentication;
+- tutti gli utenti che accedono con la password staff condivisa;
 - possono vedere prenotazioni, disponibilita e riepiloghi;
 - non vedono comandi di modifica;
 - non possono creare, modificare o eliminare dati.
@@ -171,10 +171,10 @@ Admin:
 2. Inserire i dati del progetto Firebase.
 3. In `public/app.js` compilare:
    - `ADMIN_EMAILS`
+   - `STAFF_PASSWORD`
    - indirizzo
    - telefoni
    - URL Google Maps.
-4. In `firestore.rules` sostituire `admin1@example.com` e `admin2@example.com` con le due email admin reali.
+4. In `firestore.rules` mantenere sincronizzate le stesse due email admin reali.
 5. Creare gli utenti staff in Firebase Authentication.
-6. Creare in Firestore i documenti `authorizedUsers/{uid}` con `active: true` e ruolo `admin` o `viewer`.
-7. Pubblicare con Firebase Hosting.
+6. Pubblicare con Firebase Hosting.

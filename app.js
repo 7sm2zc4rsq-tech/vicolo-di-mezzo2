@@ -1,17 +1,18 @@
 import { firebaseConfig } from "./firebase-config.js";
 
 const ADMIN_EMAILS = [
-  "admin1@example.com",
-  "admin2@example.com"
+  "fveronica73@gmail.com",
+  "fspagnoli02@gmail.com"
 ];
 
+const STAFF_PASSWORD = "Proloco@(16D)";
+
 const RESTAURANT = {
-  address: "Vicolo di Mezzo - inserire indirizzo completo",
-  mapsUrl: "https://www.google.com/maps/search/?api=1&query=Le%20Cantine%20Vicolo%20di%20Mezzo",
-  mapsEmbed: "https://www.google.com/maps?q=Le%20Cantine%20Vicolo%20di%20Mezzo&output=embed",
+  address: "Vicolo di mezzo, Rocca Priora (RM) 00079",
+  mapsUrl: "https://maps.app.goo.gl/PEeqY1f2epLdSSA57",
+  mapsEmbed: "https://www.google.com/maps?q=Vicolo%20di%20mezzo%2C%20Rocca%20Priora%20RM%2000079&output=embed",
   contacts: [
-    { label: "Telefono", value: "Inserire numero di telefono", href: "" },
-    { label: "Recapito", value: "Inserire recapito", href: "" }
+    { label: "WhatsApp", value: "3395715216", href: "https://wa.me/393395715216", icon: "./assets/whatsapp.svg" }
   ]
 };
 
@@ -139,7 +140,12 @@ function renderPublicContent() {
   el.mapsFrame.src = RESTAURANT.mapsEmbed;
   el.contactList.innerHTML = RESTAURANT.contacts.map((contact) => {
     if (contact.href) {
-      return `<a href="${contact.href}">${contact.label}: ${contact.value}</a>`;
+      return `
+        <a class="contact-link" href="${contact.href}" target="_blank" rel="noreferrer">
+          ${contact.icon ? `<img src="${contact.icon}" alt="">` : ""}
+          <span>${contact.label}: ${contact.value}</span>
+        </a>
+      `;
     }
     return `<span>${contact.label}: ${contact.value}</span>`;
   }).join("");
@@ -261,7 +267,7 @@ async function setupFirebase() {
 
   state.firebase.onAuthStateChanged(state.firebase.auth, async (user) => {
     state.currentUser = user;
-    state.role = user && ADMIN_EMAILS.includes(user.email) ? "admin" : "viewer";
+    state.role = user && isAdminEmail(user.email) ? "admin" : "viewer";
     await refreshData();
     renderAdminShell();
   });
@@ -325,17 +331,32 @@ async function handleLogin(event) {
   event.preventDefault();
   resetMessage(el.loginMessage);
   const data = new FormData(event.currentTarget);
+  const email = String(data.get("email")).trim();
+  const password = String(data.get("password"));
+
+  if (password !== STAFF_PASSWORD) {
+    el.loginMessage.textContent = "Password non corretta.";
+    return;
+  }
 
   if (state.localMode) {
-    state.currentUser = { uid: "local-admin", email: String(data.get("email")) };
-    state.role = ADMIN_EMAILS.includes(state.currentUser.email) ? "admin" : "viewer";
+    state.currentUser = { uid: "local-staff", email };
+    state.role = isAdminEmail(email) ? "admin" : "viewer";
     renderAdminShell();
     return;
   }
 
   try {
-    await state.firebase.signInWithEmailAndPassword(state.firebase.auth, data.get("email"), data.get("password"));
+    await state.firebase.signInWithEmailAndPassword(state.firebase.auth, email, password);
   } catch (error) {
+    if (error.code === "auth/user-not-found" || error.code === "auth/invalid-credential") {
+      try {
+        await state.firebase.createUserWithEmailAndPassword(state.firebase.auth, email, password);
+      } catch (createError) {
+        el.loginMessage.textContent = "Non riesco a creare l'accesso per questa email. Controlla che Email/Password sia abilitato su Firebase.";
+      }
+      return;
+    }
     el.loginMessage.textContent = "Email o password non corretti.";
   }
 }
@@ -486,6 +507,10 @@ function canEdit() {
   return state.role === "admin";
 }
 
+function isAdminEmail(email) {
+  return ADMIN_EMAILS.includes(String(email || "").trim().toLowerCase());
+}
+
 function resetMessage(node) {
   node.textContent = "";
 }
@@ -508,5 +533,5 @@ function seedLocalMode() {
       [todayString()]: { date: todayString(), maxSeats: 60 }
     });
   }
-  el.loginMessage.textContent = "Anteprima locale: usa admin1@example.com per provare il ruolo admin.";
+  el.loginMessage.textContent = "Anteprima locale: usa la password Proloco@(16D).";
 }

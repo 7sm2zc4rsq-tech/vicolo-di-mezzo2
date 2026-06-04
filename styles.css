@@ -263,6 +263,18 @@ iframe {
   padding: 16px;
 }
 
+.contact-link {
+  align-items: center;
+  display: flex !important;
+  gap: 12px;
+}
+
+.contact-link img {
+  flex: 0 0 auto;
+  height: 30px;
+  width: 30px;
+}
+
 .booking-dialog {
   border: 0;
   border-radius: 8px;
