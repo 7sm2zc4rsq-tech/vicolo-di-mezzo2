@@ -1,0 +1,19 @@
+{
+  "name": "Le Cantine Vicolo di Mezzo",
+  "short_name": "Vicolo di Mezzo",
+  "icons": [
+    {
+      "src": "./assets/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "./assets/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#08080a",
+  "background_color": "#fffdf7",
+  "display": "standalone"
+}
