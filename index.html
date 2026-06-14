@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Le Cantine Vicolo di Mezzo</title>
+    <meta name="description" content="Prenota un tavolo online da Le Cantine Vicolo di Mezzo.">
+    <link rel="icon" href="./assets/favicon.ico" sizes="any">
+    <link rel="icon" type="image/png" href="./assets/favicon-32.png" sizes="32x32">
+    <link rel="apple-touch-icon" href="./assets/apple-touch-icon.png">
+    <link rel="manifest" href="./site.webmanifest">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Nunito+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css?v=20260614-adminsections">
+  </head>
+  <body>
+    <header class="site-header">
+      <a class="brand" href="#home" aria-label="Le Cantine Vicolo di Mezzo">
+        <img src="./assets/logo-clean.png" alt="Logo Le Cantine Vicolo di Mezzo">
+      </a>
+      <nav aria-label="Navigazione principale">
+        <a href="#menu">Menu</a>
+        <a href="#dove-siamo">Dove siamo</a>
+        <a href="#contatti">Contatti</a>
+      </nav>
+    </header>
+
+    <main id="publicApp">
+      <section class="hero" id="home">
+        <div class="hero-inner">
+          <img class="hero-logo" src="./assets/logo-clean.png" alt="Le Cantine Vicolo di Mezzo">
+          <h1>Le Cantine Vicolo di Mezzo</h1>
+          <p class="hero-copy">Prenota il tuo tavolo in pochi passaggi.</p>
+          <button class="primary-button" type="button" data-open-booking>Prenota ora</button>
+        </div>
+      </section>
+
+      <section class="section" id="menu">
+        <div class="section-heading">
+          <p class="eyebrow">Il menu</p>
+          <h2>Piatti semplici, estate e convivialita</h2>
+        </div>
+        <div class="menu-grid" id="menuGrid"></div>
+      </section>
+
+      <section class="section split" id="dove-siamo">
+        <div>
+          <p class="eyebrow">Dove siamo</p>
+          <h2>Vieni a trovarci</h2>
+          <p class="large-text" id="addressText"></p>
+          <a class="secondary-button" id="mapsButton" target="_blank" rel="noreferrer">Apri navigazione</a>
+        </div>
+        <iframe id="mapsFrame" title="Mappa Le Cantine Vicolo di Mezzo" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+      </section>
+
+      <section class="section contact-band" id="contatti">
+        <p class="eyebrow">Contatti</p>
+        <h2>Per informazioni o prenotazioni telefoniche</h2>
+        <div class="contact-list" id="contactList"></div>
+      </section>
+    </main>
+
+    <main class="admin-shell" id="adminApp" hidden>
+      <section class="admin-login" id="loginPanel">
+        <img src="./assets/logo-clean.png" alt="Logo Le Cantine Vicolo di Mezzo">
+        <h1>Area riservata</h1>
+        <form id="loginForm" class="stacked-form">
+          <label>Email <input name="email" type="email" autocomplete="email" required></label>
+          <label>Password <input name="password" type="password" autocomplete="current-password" required></label>
+          <button class="primary-button" type="submit">Entra</button>
+        </form>
+        <p class="message" id="loginMessage" role="status"></p>
+      </section>
+
+      <section class="dashboard" id="dashboardPanel" hidden>
+        <div class="admin-top">
+          <div>
+            <p class="eyebrow">Dashboard</p>
+            <h1>Gestione prenotazioni</h1>
+            <p id="roleLabel"></p>
+          </div>
+          <button class="ghost-button" type="button" id="logoutButton">Esci</button>
+        </div>
+
+        <section class="admin-panel" id="phoneBookingPanel">
+          <h2>Prenotazione telefonica</h2>
+          <form id="phoneBookingForm" class="stacked-form compact"></form>
+        </section>
+
+        <section class="admin-panel admin-collapsible" data-admin-section="bookings">
+          <button class="admin-section-button" type="button" data-section-toggle="bookings">
+            <span>Prenotazioni per giorno</span>
+            <span class="notify-dot" data-notify="bookings" hidden></span>
+          </button>
+          <div class="admin-section-content" data-section-content="bookings" hidden>
+            <label class="search-field">Cerca prenotazione per nome
+              <input id="bookingSearch" type="search" autocomplete="off" placeholder="Scrivi un nome">
+            </label>
+            <div class="booking-list" id="bookingList"></div>
+          </div>
+        </section>
+
+        <section class="admin-panel admin-collapsible" data-admin-section="products">
+          <button class="admin-section-button" type="button" data-section-toggle="products">
+            <span>Riepilogo prodotti per giorno</span>
+            <span class="notify-dot" data-notify="products" hidden></span>
+          </button>
+          <div class="admin-section-content" data-section-content="products" hidden>
+            <div class="product-summary" id="productSummary"></div>
+          </div>
+        </section>
+
+        <section class="admin-panel admin-collapsible" data-admin-section="tickets">
+          <button class="admin-section-button" type="button" data-section-toggle="tickets">
+            <span>Ticket online per giorno</span>
+            <span class="notify-dot" data-notify="tickets" hidden></span>
+          </button>
+          <div class="admin-section-content" data-section-content="tickets" hidden>
+            <label class="search-field">Cerca ticket per nome
+              <input id="ticketSearch" type="search" autocomplete="off" placeholder="Scrivi un nome">
+            </label>
+            <div class="ticket-list" id="ticketList"></div>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <dialog class="booking-dialog" id="bookingDialog">
+      <form method="dialog" class="dialog-close-form">
+        <button class="close-button" aria-label="Chiudi prenotazione">x</button>
+      </form>
+      <section>
+        <p class="eyebrow">Prenotazione online</p>
+        <h2>Prenota un tavolo</h2>
+        <p class="message soldout" id="soldOutMessage" hidden>POSTI ESAURITI - PRENOTAZIONI SOLD OUT</p>
+        <div id="ticketReceipt" class="ticket-receipt" hidden></div>
+        <form id="bookingForm" class="stacked-form"></form>
+        <p class="message" id="bookingMessage" role="status"></p>
+      </section>
+    </dialog>
+
+    <script type="module" src="./app.js?v=20260614-adminsections"></script>
+  </body>
+</html>
